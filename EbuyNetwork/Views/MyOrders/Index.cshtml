@@ -1,0 +1,163 @@
+﻿
+@{
+    ViewBag.Title = "My orders";
+    List<EbuyNetwork.Models.Order> orders = ViewBag.orders;
+}
+
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+    <li class="active">My Orders <span class="label label-default">@ViewBag.item_count</span></li>
+</ol>
+
+<div class="pad-6"></div>
+
+
+<div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+                <form action="@Url.Action("Index", "MyOrders")" method="get" id="jsearchform">
+                    <div class="col-lg-3">
+                        <div class="form-label">Keyword</div>
+                        <input type="text" class="form-control" name="keyword" value="@ViewBag.keyword" />
+                    </div>
+
+                    <div class="col-lg-2">
+                        <div class="form-label">Status</div>
+                        <select class="form-control" name="status" id="jstatus">
+                            <option value="0">Any..</option>
+                            <option value="2">Sold</option>
+                            <option value="3">Delivered</option>
+                        </select>
+
+                        @if (ViewBag.status != null)
+                        {
+                            <script>
+                                $('#jstatus').val(@ViewBag.status);
+                            </script>
+                        }
+                    </div>
+
+                    <div class="col-lg-2">
+                        <div class="form-label">Start Date</div>
+                        <input type="text" class="form-control" name="startDate" value="@ViewBag.startDate" id="startDate" />
+                    </div>
+
+                    <div class="col-lg-2">
+                        <div class="form-label">End Date</div>
+                        <input type="text" class="form-control"  name="endDate" value="@ViewBag.endDate" id="endDate" />
+                    </div>
+
+
+
+                    <div class="col-lg-3">
+                        <div class="form-label">&nbsp;</div>
+                        <div class="btn btn-default" onclick="$('#jsearchform').submit();"><span class="glyphicon glyphicon-search"></span> Search</div>
+                        <div class="btn btn-default" onclick="window.location='@Url.Action("Index", "MyItems")'">Reset filters</div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="no-more-tables">
+    <table class="fullwidth table-bordered table-striped table-condensed cf">
+        <thead class="cf">
+            <tr>
+                <th class="numeric">Item Code</th>
+                <th>Name</th>
+                <th>Ordered time</th>
+                <th>Status</th>
+                <th>Payment code</th>
+                <th class="numeric">Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                double totalPrice = 0f;
+                foreach (EbuyNetwork.Models.Order order in orders)
+                {
+                    <tr>
+                        <td data-title="Item Code">@EbuyNetwork.Models.EbuyNetwork.makeItemCode(order.item.id)</td>
+                        <td data-title="Name">@order.item.name</td>
+                        <td data-title="Ordered time">@order.orderedTime.ToString("yyyy-MM-dd H:m")</td>
+                        <td data-title="Status">
+                            @if (order.item.isDelivered)
+                            {
+                                <span class="label label-success">SHIPPED</span>
+                            }
+                            else
+                            {
+                                <span class="label label-danger">PAID</span>
+                            }
+                        </td>
+                        <td data-title="Payment code">@order.paymentCode</td>
+                        <td data-title="Price" align="right" class="numeric">@order.item.price.ToString("N2")</td>
+                        <td data-title="Action">
+                            <div class="btn-group">
+                                <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="glyphicon glyphicon-briefcase"></span> Item <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="@Url.Action("Index", "Item", new { item_id = order.item.id })"> View Product</a></li>
+                                    @if (!order.item.isDelivered)
+                                    {
+                                        <li><a href="javascript:cancelOrder(@order.id,@order.item.id,@order.item.userId)">Cancel order</a></li>
+                                    }
+
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    totalPrice += order.item.price;
+                }
+
+            }
+
+            <tr>
+                <td colspan="5"></td>
+                <td data-title="Total price" align="right" style="color:palevioletred;font-weight:bold">@totalPrice.ToString("N02")</td>
+                <td></td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    @if (orders.Count == 0)
+    {
+        <div class="alert alert-danger">No result found to display</div>
+    }
+
+</div>
+
+<ul class="pagination">
+    @for (int i = 0; i < ViewBag.totalPages; i++)
+    {
+        string url = ViewBag.qurl;
+        url = url.Replace("pageNumber", i.ToString());
+        if (i == ViewBag.page)
+        {
+            <li class="active"><a href="@url">@(i + 1)</a></li>
+        }
+        else
+        {
+            <li><a href="@url">@(i + 1)</a></li>
+        }
+
+    }
+</ul>
+
+
+
+
+
+<div class="pad-6"></div>
+
+<div class="btn btn-primary" onclick="window.location='@Url.Action("Index","Products")'"><span class="glyphicon glyphicon-shopping-cart"></span> Browse items</div>
+
+
+
+<script src="~/Scripts/MyOrders/MyOrdersScript.js"></script>

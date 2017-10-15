@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "Success";
+}
+
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home")">Home</a></li>
+    <li><a href="@Url.Action("Index","Register")">Registration</a></li>
+    <li class="active">Success</li>
+</ol>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h3>Registration successful</h3>
+            <div class="box">
+                <p>Thank you for registering on Ebuy network. If you have trouble with any feature of Ebuy network please <a href="@Url.Action("Index","AboutUs")">contact us <span class="glyphicon glyphicon-link"></span> </a></p>
+            </div>
+            <div class="btn btn-primary" onclick="window.location = '@Url.Action("Index","Login")';">Login to your account</div>
+        </div>
+    </div>
+</div>

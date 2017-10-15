@@ -1,0 +1,191 @@
+﻿
+@{
+    ViewBag.Title = "My items";
+    List<EbuyNetwork.Models.Item> items = ViewBag.items;
+}
+
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+    <li class="active">My Products <span class="label label-default">@ViewBag.item_count</span></li>
+</ol>
+
+<div class="pad-6"></div>
+
+<div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+                <form action="@Url.Action("Index", "MyItems")" method="get" id="jsearchform">
+                    <div class="col-lg-3">
+                        <div class="form-label">Keyword</div>
+                        <input type="text" class="form-control" name="keyword" value="@ViewBag.keyword" />
+                    </div>
+
+                    <div class="col-lg-2">
+                        <div class="form-label">Status</div>
+                        <select class="form-control" name="status" id="jstatus">
+                            <option value="0">Any..</option>
+                            <option value="1">Posted</option>
+                            <option value="2">Sold</option>
+                            <option value="3">Delivered</option>
+                        </select>
+                        @if (ViewBag.status!=null)
+                        {
+                        <script>
+                            $('#jstatus').val(@ViewBag.status);
+                        </script>
+                        }
+                    </div>
+
+                    <div class="col-lg-2">
+                        <div class="form-label">Start price</div>
+                        <input type="number" class="form-control" min="0" name="startPrice" value="@ViewBag.startPrice"/>
+                    </div>
+
+                    <div class="col-lg-2">
+                        <div class="form-label">End price</div>
+                        <input type="number" class="form-control" min="0" name="endPrice" value="@ViewBag.endPrice" />
+                    </div>
+
+
+
+                    <div class="col-lg-3">
+                        <div class="form-label">&nbsp;</div>
+                        <div class="btn btn-default" onclick="$('#jsearchform').submit();"><span class="glyphicon glyphicon-search"></span> Search</div>
+                        <div class="btn btn-default" onclick="window.location='@Url.Action("Index","MyItems")'">Reset filters</div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="no-more-tables">
+    <table class="fullwidth table-bordered table-striped table-condensed cf">
+        <thead class="cf">
+            <tr>
+                <th class="numeric">Item Code</th>
+                <th class="numeric">Name</th>
+                <th class="numeric">Status</th>
+                <th>Price</th>
+                <th class="numeric">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                double totalPrice = 0f;
+                foreach (EbuyNetwork.Models.Item item in items)
+                {
+                    <tr>
+                        <td data-title="Item Code">@EbuyNetwork.Models.EbuyNetwork.makeItemCode(item.id)</td>
+                        <td data-title="Name">@item.name</td>
+                        <td data-title="Status">
+                            @if (item.isSold && !item.isDelivered)
+                            {
+                                <span class="label label-warning">SOLD</span>
+                            }
+                            else if (item.isDelivered && item.isSold)
+                            {
+                                <span class="label label-success">SHIPPED</span>
+                            }
+                            else
+                            {
+                                <span class="label label-danger">POSTED</span>
+                            }
+                        </td>
+                        <td data-title="Price" class="numeric" align="right">@item.price.ToString("N2")</td>
+                        <td data-title="Action" class="numeric">
+                            <!-- Single button -->
+
+                            <div class="btn-group">
+                                <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="glyphicon glyphicon-eye-open"></span> View <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="@Url.Action("Index","Item", new {item_id = item.id })">Product</a></li>
+                                    @if (item.isSold)
+                                    {
+                                        <li><a href="javascript:showPaymentInfo(@item.id)">Payment</a></li>
+                                    }
+
+                                </ul>
+                            </div>
+                            @if (!item.isSold)
+                            {
+                                <a class="btn btn-default" href="@Url.Action("Index", "EditItem", new { edit_id = item.id })"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+                            }
+                            <a data-toggle="tooltip" title="Remove item" class="btn btn-danger" href="javascript:removeItem(@item.id);"><span class="glyphicon glyphicon-remove"></span></a>
+                            @if (!item.isDelivered && item.isSold)
+                            {
+                                <a data-toggle="tooltip" title="Mark as delivered!" class="btn btn-success" href="javascript:deliverItem(@item.id,@item.purchasedUserId);"><span class="glyphicon glyphicon-check"></span></a>
+                            }
+                        </td>
+                    </tr>
+                    totalPrice += item.price;
+                }
+            }
+
+            <tr>
+                <td colspan="3"></td>
+                <td data-title="Total price" align="right" style="color:palevioletred;font-weight:bold">@totalPrice.ToString("N02")</td>
+                <td></td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    @if (items.Count == 0)
+    {
+        <div class="alert alert-danger">No result found to display</div>
+    }
+
+</div>
+
+
+<ul class="pagination">
+    @for (int i = 0; i < ViewBag.totalPages; i++)
+    {
+        string url = ViewBag.qurl;
+        url = url.Replace("pageNumber", i.ToString());
+        if (i == ViewBag.page)
+        {
+            <li class="active"><a href="@url">@(i + 1)</a></li>
+        }
+        else
+        {
+            <li><a href="@url">@(i + 1)</a></li>
+        }
+
+    }
+</ul>
+
+
+
+<div class="pad-6"></div>
+
+<div class="btn btn-primary" onclick="window.location='@Url.Action("Index","PostItem")'"><span class="glyphicon glyphicon-plus"></span> New item</div>
+
+
+<!-- Modal -->
+
+    <div class="modal fade" id="paymentInfoDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Payment Information</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div id="jpaymentInfoCon"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- / Modal -->
+
+<script src="~/Scripts/MyItems/MyItemsScript.js"></script>

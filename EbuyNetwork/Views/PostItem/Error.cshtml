@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "Error";
+}
+
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home")">Home</a></li>
+    <li><a href="@Url.Action("Index","PostItem")">Post item</a></li>
+    <li class="active">Error</li>
+</ol>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h3>Product insertion failed</h3>
+            <div class="box">
+                <p>There was a problem while inserting your product into database. Please try again with different details. If you have trouble with any feature of Ebuy network please <a href="@Url.Action("Index","AboutUs")">contact us <span class="glyphicon glyphicon-link"></span> </a></p>
+            </div>
+            <div class="btn btn-primary" onclick="window.location = '@Url.Action("Index","PostItem")';">Try adding new product</div>
+        </div>
+    </div>
+</div>

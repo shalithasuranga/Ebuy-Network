@@ -1,0 +1,167 @@
+﻿
+@{
+    EbuyNetwork.Models.Item item = ViewBag.item;
+    EbuyNetwork.Models.Order order = ViewBag.order;
+    EbuyNetwork.Models.User user = (EbuyNetwork.Models.User) Session["loggedUser"];
+    ViewBag.Title = item.name;
+}
+
+<h2></h2>
+
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home")">Home</a></li>
+    <li><a href="@Url.Action("Index","Products")">Products</a></li>
+    <li><a href="@Url.Action("Index","Products", new { category_id = item.category.id })">@item.category.name</a></li>
+    <li class="active">@EbuyNetwork.Models.EbuyNetwork.makeItemCode(item.id)</li>
+</ol>
+
+@if (user != null)
+{
+    if (item.userId == user.id)
+    {
+    <div class="panel panel-default">
+        <div class="panel-heading"><b>Admin panel</b> <small><span class="glyphicon glyphicon-exclamation-sign"></span> only you can see this</small></div>
+        <div class="panel-body">
+
+            @if (item.isSold)
+            {
+            <h4>Buyer information</h4>
+            <div class="pad-6"></div>
+            <ul class="list-group">
+                <li class="list-group-item"><b>Name : </b>@order.user.firstName @order.user.lastName</li>
+                <li class="list-group-item"><b>Email : </b><a href="mailto:@order.user.email">@order.user.email</a></li>
+                <li class="list-group-item"><b>Shipping address : </b>@order.user.address</li>
+            </ul>
+
+            <h4>Payment information</h4>
+            <div class="pad-6"></div>
+            <ul class="list-group">
+                <li class="list-group-item"><b>Ordered Time : </b>@order.orderedTime.ToString("yy-mm-dd h:m:s")</li>
+                <li class="list-group-item"><b>Bank details : </b>@order.user.bankDetails</li>
+                <li class="list-group-item"><b>Transaction Code : </b>@order.paymentCode</li>
+            </ul>
+            }
+
+            <div>
+                <div class="btn btn-danger" onclick="removeItem(@item.id);"><span class="glyphicon glyphicon-trash"></span> Remove</div>
+                <div class="btn btn-default" onclick="window.location='@Url.Action("Index", "EditItem", new { edit_id = item.id })';"><span class="glyphicon glyphicon-edit"></span> Edit</div>
+            </div>
+        </div>
+
+
+    </div>
+    }
+}
+
+<div class="container">
+    <div class="row">
+        <div class="row">
+
+            <div class="col-lg-4">
+                <img src="~/Content/Uploads/@item.imageFile" class="product-image fullwidth img-responsive img-thumbnail" />
+            </div>
+            <div class="col-lg-8">
+                <div>
+                    <h3>@item.name</h3>
+                    <span class="label label-danger">@item.category.name</span>
+
+                    <h5><span class="glyphicon glyphicon-user"></span> @item.user.firstName @item.user.lastName</h5>
+                </div>
+
+                <h3>Rs @item.price.ToString("N2")/=</h3>
+                <p>@Html.Raw(item.description.Replace("\n","<br>"))</p>
+
+                @if (user != null)
+                {
+                    if (user.id != item.userId)
+                    {
+
+                        if (!item.isSold)
+                        {
+                        <div class="btn btn-primary" data-toggle="modal" data-target="#orderDialog">Order now</div>
+                        }
+                        else
+                        {
+                        <div class="alert alert-danger">This item was sold</div>
+                        }
+                    }
+                }
+                else
+                {
+                    <div class="btn btn-primary" onclick="window.location='@Url.Action("Index","Login")'">Order now</div>
+                }
+                <div class="btn btn-default" data-toggle="modal" data-target="#sellerDialog">Contact seller</div>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+<!-- Modal -->
+@if (user != null)
+{
+<div class="modal fade" id="orderDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Order @item.name</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-label">Shipping Address</div>
+                        <div class="form-control fullwidth">@user.address</div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-label">Payment code</div>
+                        <input type="text" class="form-control fullwidth" id="jpaymentcode"/>
+                        <div class="pad-6"></div>
+                        <div class="alert alert-info">
+                            <b>NOTE : </b> Transfer Rs @item.price.ToString("N2") to seller's bank account and enter the payment receipt number here. <br/><br/>
+                            <b>Seller's bank details</b><hr/>
+                            @item.user.bankDetails
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="orderItem(@item.id,@item.userId);">Order now</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- / Modal -->
+}
+
+<div class="modal fade" id="sellerDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Seller information</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group">
+                    <li class="list-group-item"><b>Name : </b>@item.user.firstName @item.user.lastName</li>
+                    @if (Session["loggedUser"] != null)
+                    {
+                    <li class="list-group-item"><b>Email : </b><a href="mailto:@item.user.email">@item.user.email</a></li>
+                    <li class="list-group-item"><b>Address : </b>@item.user.address</li>
+                    <li class="list-group-item"><b>Bank details : </b>@item.user.bankDetails</li>
+                    }
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- / Modal -->
+<script src="~/Scripts/Item/ItemScript.js"></script>

@@ -1,0 +1,163 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    /*max-width: 280px;*/
+}
+
+
+.fullwidth {
+    width:100%;
+}
+
+.form-label{
+    font-weight:bold;
+    padding: 6px 0px;
+}
+
+.pad-6{
+    padding:6px;
+}
+
+.theme-background {
+    background-color:#ff802c !important;
+}
+
+.theme-background2 {
+    
+}
+
+.filter-box {
+    border-radius:4px !important;
+    background-color:#f1f1f1 !important;
+    padding:14px;
+}
+
+.btn-theme {
+    background-color:#ff802c !important;
+    border:none;
+    color:#ffffff;
+}
+
+
+.product-item {
+    
+}
+
+.product-item .product-image{
+    height:200px;
+    background-repeat:no-repeat !important;
+    background-size:cover;
+    width:100%;
+}
+
+.product-item .description {
+    height:80px;
+    overflow:hidden;
+}
+
+
+.single-item{
+
+}
+
+.single-item .product-image {
+    background-repeat:no-repeat;
+    background-size:contain;
+}
+
+
+.user-icon {
+    font-size:42px;
+    text-align:center;
+}
+
+.user-icon div {
+    background-color:#ccc;
+    padding:12px;
+    border-radius:50%;
+    display:inline-block;
+    color:#808080;
+}
+
+
+@media only screen and (max-width: 800px) {
+
+    
+    /* Force table to not be like tables anymore */
+	#no-more-tables table, 
+	#no-more-tables thead, 
+	#no-more-tables tbody, 
+	#no-more-tables th, 
+	#no-more-tables td, 
+	#no-more-tables tr { 
+		display: block; 
+	}
+ 
+	/* Hide table headers (but not display: none;, for accessibility) */
+	#no-more-tables thead tr { 
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+ 
+	#no-more-tables tr { border: 1px solid #ccc; }
+ 
+	#no-more-tables td { 
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee; 
+		position: relative;
+		padding-left: 50%; 
+		white-space: normal;
+		text-align:left;
+	}
+ 
+	#no-more-tables td:before { 
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%; 
+		padding-right: 10px; 
+		white-space: nowrap;
+		text-align:left;
+		font-weight: bold;
+	}
+ 
+	/*
+	Label the data
+	*/
+	#no-more-tables td:before { content: attr(data-title); }
+}
+
+
+nav.navbar{
+    background-color:darkorange !important;
+    color:white;
+}
+
+nav.navbar li a{
+    color:#ffffff !important;
+    font-weight:bold;
+}
+
+nav.navbar li a:hover{
+    background-color:rgba(255,255,255,0.3) !important;
+}
+
+navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+    background-color:black !important;
+}

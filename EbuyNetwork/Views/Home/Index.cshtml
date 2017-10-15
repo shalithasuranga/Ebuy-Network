@@ -1,0 +1,92 @@
+﻿
+@{
+    ViewBag.Title = "Home";
+}
+
+
+
+<div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+                <form action="@Url.Action("Index", "Products")" method="get" id="jsearchform">
+                    <div class="col-lg-4">
+                        <div class="form-label">Keyword</div>
+                        <input type="text" class="form-control" name="keyword" placeholder="ie - Galaxy alpha, lenovo"/>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="form-label">Category</div>
+                        <select class="form-control" name="category_id">
+                            <option value="0">Any category...</option>
+                            @foreach (EbuyNetwork.Models.Category cat in ViewBag.categories)
+                            {
+                                <option value="@cat.id">@cat.name</option>
+                            }
+                        </select>
+                    
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="form-label">&nbsp;</div>
+                        <div class="btn btn-default" onclick="$('#jsearchform').submit();"><span class="glyphicon glyphicon-search"></span> Search</div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <div class="row">
+        <div class="col-lg-4">
+            <ul class="list-group">
+                @foreach (EbuyNetwork.Models.Category cat in ViewBag.categories)
+                {
+                <li class="list-group-item"><a href="@Url.Action("Index","Products", new { category_id = cat.id })">@cat.name</a> <span class="badge">@cat.item_count</span></li>
+                }
+            </ul>
+
+        </div>
+
+
+        <div class="col-lg-8">
+            @foreach (EbuyNetwork.Models.Item item in ViewBag.items)
+            {
+            <!--product item-->
+
+            <div class="col-lg-6 col-md-6 product-item">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @item.name<br>
+                        <span class="label label-danger">@item.category.name</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="product-image" style="background-image:url('Content/Uploads/@item.imageFile')"></div>
+                        <div class="product-info">
+
+                            <h3>Rs @item.price.ToString("N02")/=</h3>
+                            <div class="description">
+                                <p>@EbuyNetwork.Models.EbuyNetwork.formatDescription(item.description)</p>
+                            </div>
+                            <div class="btn btn-block btn-primary" onclick="window.location='@Url.Action("Index","Item", new { item_id=item.id})'">View product</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--/ product item-->
+            }
+
+
+            <div class="pad-6"></div>
+            <a href="@Url.Action("Index","Products")"><span class="glyphicon glyphicon-shopping-cart"></span> More products</a>
+        </div>
+
+
+    </div>
+</div>
+
+

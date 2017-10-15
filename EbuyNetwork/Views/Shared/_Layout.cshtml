@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Ebuy Network</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap-dialog.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/Plugins/DatePicker/Css/bootstrap-datepicker.css" type="text/css" rel="stylesheet" />
+    <link href="~/Content/favicon.ico" rel="shortcut icon"/>
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap-dialog.js"></script>
+    <script src="~/Content/Plugins/DatePicker/Js/bootstrap-datepicker.js"></script>
+    <script src="~/Scripts/Global/CommonScript.js"></script>
+</head>
+<body>
+
+
+
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-8 col-xs-12">
+                <img src="~/Content/Images/logo.png" class="img-responsive"/>
+            </div>
+            <div class="col-lg-8 text-right">
+              <div onclick="window.location = '@Url.Action("Index","PostItem")';" class="btn btn-primary">Post Item for sale!</div>
+                <div class="pad-6"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <nav class="navbar navbar-default" role="navigation">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li><a href="@Url.Action("Index","Home")">Home</a></li>
+                            <li><a href="@Url.Action("Index","Products")">Products</a></li>
+                            <li><a href="@Url.Action("Index","PostItem")">Sell item</a></li>
+                            <li><a href="@Url.Action("Index","AboutUs")">About Us</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            @if (Session["loggedUser"] == null)
+                            {
+                                <li><a href="@Url.Action("Index","Register")">Sign Up</a></li>
+                                <li><a href="@Url.Action("Index","Login")">Login</a></li>
+                            }
+                           
+                            @if (Session["loggedUser"] != null) {
+                                EbuyNetwork.Models.User luser = (EbuyNetwork.Models.User)Session["loggedUser"];
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">@luser.firstName @luser.lastName <b class="caret"></b></a>
+
+                                <ul class="dropdown-menu" style="padding: 15px;min-width: 250px;">
+                                    <li>
+                                        <div class="user-icon">
+                                            <div class="glyphicon glyphicon-user"></div>
+                                        </div>
+                                        <div class="pad-6"></div>
+                                    </li>
+                                    <li>
+                                        <div class="btn btn-primary btn-block" onclick="window.location='@Url.Action("Index","Messages")';">Messages</div>
+                                    </li>
+                                    <li class="divider"></li>
+
+                                    <li>
+                                        <div class="btn btn-primary btn-block" onclick="window.location='@Url.Action("Index","MyProfile")';">My Profile</div>
+                                        <div onclick="window.location='@Url.Action("Index","MyOrders")';" class="btn btn-primary btn-block">My Orders</div>
+                                        <div class="btn btn-primary btn-block" onclick="window.location='@Url.Action("Index","MyItems")';">My Products</div>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <div onclick="window.location = '@Url.Action("Signout","Login")';" class="btn btn-danger btn-block">Sign out</div>
+                                    </li>
+                                </ul>
+                            </li>
+                            }
+                        </ul>
+                    </div>
+                    <!-- /.navbar-collapse -->
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Ebuy Network <span class="pull-right">Developed by Group Eye</span></p>
+            
+        </footer>
+    </div>
+
+
+</body>
+</html>

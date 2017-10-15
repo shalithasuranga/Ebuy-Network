@@ -1,0 +1,141 @@
+﻿
+@{
+    ViewBag.Title = "Products";
+    List < EbuyNetwork.Models.Item > items= ViewBag.items;
+}
+
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home")">Home</a></li>
+    <li class="active">Products</li>
+</ol>
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-lg-4">
+
+            <form action="Products" method="get">
+                <div class="theme-background2 filter-box">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-label">Keyword</div>
+                        <input class="fullwidth form-control" type="text" value="@ViewBag.keyword" name="keyword" placeholder="ie - Galaxy alpha, lenovo" />
+                    </div>
+
+                    <div class="col-lg-12">
+                        <div class="form-label">Category</div>
+                        <select class="form-control" name="category_id">
+                            <option value="0">Any category...</option>
+                            @foreach (EbuyNetwork.Models.Category cat in ViewBag.categories)
+                            {
+                                if (ViewBag.category_id == cat.id)
+                                {
+                                    <option value="@cat.id" selected>@cat.name</option>
+                                }
+                                else
+                                {
+                                    <option value="@cat.id">@cat.name</option>
+                                }
+
+                            }
+                        </select>
+
+                    </div>
+
+
+
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-label">Price start</div>
+                        <input class="fullwidth form-control" type="number" min="0" name="startPrice" value="@ViewBag.startPrice"/>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-label">Price end</div>
+                        <input class="fullwidth form-control" type="number" min="0" name="endPrice" value="@ViewBag.endPrice" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="pad-6 clearfix"></div>
+                        <input type="submit" class="btn btn-primary" value="Filter results"/>
+                        <input type="button" class="btn btn-default" value="Reset search" onclick="window.location = '@Url.Action("Index","Products")';"/>
+                        <div class="pad-6 clearfix"></div>
+                    </div>
+                </div>
+
+            </form>
+            </div>
+            <div class="pad-6"></div>
+
+        </div>
+        <div class="col-lg-8">
+            @if (ViewBag.totalResult != 0)
+            {
+            <div class="alert alert-info alert-link"><span class="glyphicon glyphicon-search"></span> Displaying <b>@ViewBag.currentItems</b> of total <b>@ViewBag.totalResult</b> results.</div>
+            }
+            <div class="row">
+                @foreach (EbuyNetwork.Models.Item item in items)
+                {
+                <!--product item-->
+
+                        <div class="col-lg-6 col-md-6 product-item">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    @item.name<br>
+                                    <span class="label label-danger">@item.category.name</span>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="product-image" style="background-image:url('Content/Uploads/@item.imageFile')"></div>
+                                    <div class="product-info">
+
+                                        <h3>Rs @item.price.ToString("N02")/=</h3>
+                                        <p>@EbuyNetwork.Models.EbuyNetwork.formatDescription(item.description)</p>
+
+                                        <div class="btn btn-block btn-primary" onclick="window.location='@Url.Action("Index","Item", new { item_id=item.id})'">View product</div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                <!--/ product item-->
+                    }
+
+
+
+
+            </div>
+
+            @if (items.Count == 0)
+            {
+                <div>
+                    <div class="alert alert-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> No item found to display.</div>
+                </div>
+            }
+
+            <ul class="pagination">
+                @for (int i = 0; i < ViewBag.totalPages; i++)
+                {
+                    string url = ViewBag.qurl;
+                    url = url.Replace("pageNumber", i.ToString());
+                    if (i == ViewBag.page)
+                    {
+                        <li class="active"><a href="@url">@(i + 1)</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="@url">@(i + 1)</a></li>
+                    }
+
+                }
+            </ul>
+
+        </div>
+</div>
+
+
+
+
+
+

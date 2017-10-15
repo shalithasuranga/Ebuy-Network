@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "Email exists";
+}
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h3>Email exists</h3>
+            <div class="box">
+                <p>Email address you entered is already exists in database. Please try again with different details. If you have trouble with any feature of Ebuy network please <a href="@Url.Action("Index","AboutUs")">contact us <span class="glyphicon glyphicon-link"></span> </a></p>
+            </div>
+            <div class="btn btn-primary" onclick="window.location = '@Url.Action("Index","Login")';">Login to your account</div>
+            <div class="btn btn-default" onclick="history.back()">Go back</div>
+        </div>
+    </div>
+</div>
+

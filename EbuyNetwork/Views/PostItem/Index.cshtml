@@ -1,0 +1,94 @@
+﻿
+@{
+    ViewBag.Title = "Post item for sale";
+}
+
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home")">Home</a></li>
+    <li class="active">Post item</li>
+</ol>
+
+<div class="container">
+
+    <form action="" method="post" onsubmit="return ValidateForm();" enctype="multipart/form-data">
+        <div class="col-lg-6">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-label">Product title</div>
+                    <input type="text" class="fullwidth form-control" id="jname" name="name" />
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-label">Category</div>
+                    <select class="form-control fullwidth" name="category" id="jcategory">
+                        <option value="0">Select category...</option>
+                        @foreach (EbuyNetwork.Models.Category cat in ViewBag.categories) {
+                            <option value="@cat.id">@cat.name (@cat.item_count)</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-label">Price (Rs)</div>
+                    <input type="number" min="0" step="0.01" class="fullwidth form-control" id="jprice" name="price" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-label">Description</div>
+                    <textarea class="fullwidth form-control" id="jdescription" name="description" style="height:120px;"></textarea>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-label">Select Image</div>
+                    <input type="file" class="fullwidth" name="file" id="jimage" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="pad-6"></div>
+                    <label><input type="checkbox" id="jacceptterms" /> I accept Ebuy Network Terms &amp; Conditions.</label>
+                    <div class="pad-6"></div>
+                    <div class="alert alert-danger" style="display:none;" id="jregisteralert"></div>
+                    <div class="pad-6"></div>
+                    <input class="btn btn-primary btn-lg" type="submit" name="registerRequest" value="Post item" />
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
+
+    </form>
+
+
+
+
+
+    <div class="col-lg-6">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>Terms &amp; Conditions</h3>
+                <div class="box">
+                    <p>Ebuy network has no connection has limited connection between sellers.Thus we are unable to get total responsibility of your behaviour on this network.<br /><br />Thus your bank details might be misused. Furthermore virtual products are not allowed.</p>
+                    <hr />
+                    <a href="@Url.Action("Index","AboutUs")"><span class="glyphicon glyphicon-user"></span> About us</a>
+                </div> 
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+<script src="~/Scripts/PostItem/PostItemScript.js"></script>
